@@ -1,0 +1,80 @@
+{
+  "name": "fimk-sdk-v2",
+  "version": "1.0.0",
+  "description": "FIMK support libraries for Node.js",
+  "keywords": [
+    "fimk",
+    "fimk-sdk",
+    "blockchain",
+    "websocket",
+    "nodejs",
+    "npm-package",
+    "typescript",
+    "javascript",
+    "cryptography",
+    "microservices"
+  ],
+  "main": "./dist/fimk-sdk",
+  "files": [
+    "dist"
+  ],
+  "author": "Dennis de Klerk <dennis@heatledger.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heatcrypto/fimk-sdk-v2"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "scripts": {
+    "postinstall": "npm dedupe",
+    "test": "jest --detectOpenHandles",
+    "build": "rimraf dist && tsc --project tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/big.js": "^4.0.5",
+    "@types/bytebuffer": "^5.0.41",
+    "@types/jest": "^26.0.0",
+    "@types/long": "^4.0.1",
+    "@types/node-fetch": "^2.5.7",
+    "@types/pako": "^1.0.1",
+    "jest": "^26.0.1",
+    "node-fetch": "^2.6.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.1.0",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "big.js": "5.2.2",
+    "bytebuffer": "5.0.1",
+    "long": "3.2.0",
+    "pako": "1.0.11",
+    "curve25519": "heatcrypto/curve25519#master",
+    "cryptojs": "heatcrypto/CryptoJs#master"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    }
+  }
+}
