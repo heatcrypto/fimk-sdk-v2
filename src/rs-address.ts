@@ -78,7 +78,7 @@ const cwmap = [3, 2, 1, 0, 7, 6, 5, 4, 13, 14, 15, 16, 12, 8, 9, 10, 11]
 const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
 
 export class RsAddress {
-  private guess = []
+  private guess: Array<any> = []
   constructor(private prefix: string) {}
 
   ginv(a) {
@@ -100,7 +100,7 @@ export class RsAddress {
   }
 
   find_errors(lambda) {
-    let errloc = []
+    let errloc: Array<number> = []
     for (let i = 1; i <= 31; i++) {
       let sum = 0
       for (let j = 0; j < 5; j++) {
@@ -119,7 +119,7 @@ export class RsAddress {
   guess_errors() {
     let el = 0,
       b = [0, 0, 0, 0, 0],
-      t = []
+      t: Array<number> = []
     let deg_lambda = 0,
       lambda = [1, 0, 0, 0, 0] // error+erasure locator poly
     // Berlekamp-Massey algorithm to determine error+erasure locator polynomial
@@ -164,7 +164,7 @@ export class RsAddress {
 
     for (let r = 0; r < errors; r++) {
       let t = 0
-      let pos = errloc[r]
+      let pos: number = errloc[r]
       let root = 31 - pos
 
       for (
@@ -250,8 +250,8 @@ export class RsAddress {
   }
 
   from_acc(acc) {
-    let inp = [],
-      out = [],
+    let inp: Array<number> = [],
+      out: Array<number> = [],
       pos = 0,
       len = acc.length
 
@@ -305,7 +305,7 @@ export class RsAddress {
 
   account_id() {
     let out = "",
-      inp = [],
+      inp: Array<number> = [],
       len = 13
 
     for (let i = 0; i < 13; i++) {
@@ -351,13 +351,12 @@ export class RsAddress {
 
     if (adr.indexOf(this.prefix + "-") == 0) adr = adr.substr(4)
 
+    var clean: Array<number> = []
     if (adr.match(/^\d{1,20}$/g)) {
       // account id
       if (allow_accounts) return this.from_acc(adr)
     } // address
     else {
-      var clean = []
-
       for (let i = 0; i < adr.length; i++) {
         let pos = alphabet.indexOf(adr[i])
 
@@ -411,7 +410,7 @@ export class RsAddress {
 
   format_guess(s, org) {
     let d = "",
-      list = []
+      list: Array<any> = []
 
     s = s.toUpperCase()
     org = org.toUpperCase()

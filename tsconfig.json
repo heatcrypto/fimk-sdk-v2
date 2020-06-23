@@ -78,6 +78,7 @@
     "src/random-bytes.ts",
     "src/transaction-type.ts",
     "src/transaction.ts",
-    "src/utils.ts"
+    "src/utils.ts",
+    "src/rs-address"
   ]
 }
