@@ -42,7 +42,6 @@ var Configuration = /** @class */ (function () {
 exports.Configuration = Configuration;
 var FimkSDK = /** @class */ (function () {
     function FimkSDK(config) {
-        this.crypto = crypto;
         var config_ = config ? config : new Configuration();
         this.config = config_;
     }
