@@ -51,7 +51,6 @@ export class Configuration {
 }
 
 export class FimkSDK {  
-  public crypto = crypto
   public config: Configuration
 
   constructor(config?: Configuration) {
