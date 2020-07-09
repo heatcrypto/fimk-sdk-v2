@@ -130,7 +130,7 @@ var TransactionImpl = /** @class */ (function () {
         var _this = this;
         this.height = 0x7fffffff;
         this.appendages = [];
-        this.isTestnet = builder._isTestnet;
+        this.isTestnet = builder._isTestnet || false;
         this.timestamp = builder._timestamp;
         this.type = builder._type;
         this.version = builder._version;
@@ -287,11 +287,11 @@ var TransactionImpl = /** @class */ (function () {
         raw["version"] = this.version;
         raw["timestamp"] = this.timestamp;
         raw["deadline"] = this.deadline;
-        raw["senderPublicKey"] = this.senderPublicKey ? new Buffer(this.senderPublicKey) : new Buffer(0);
+        raw["senderPublicKey"] = this.senderPublicKey ? Buffer.from(this.senderPublicKey) : Buffer.allocUnsafeSlow(0);
         raw["recipientId"] = long_1.default.fromString(this.recipientId, true);
         raw["amountHQT"] = long_1.default.fromString(this.amountHQT);
         raw["feeHQT"] = long_1.default.fromString(this.feeHQT);
-        raw["signature"] = this.signature ? new Buffer(this.signature) : new Buffer(0);
+        raw["signature"] = this.signature ? Buffer.from(this.signature) : Buffer.allocUnsafeSlow(0);
         raw["flags"] = this.getFlags();
         raw["ecBlockHeight"] = this.ecBlockHeight;
         raw["ecBlockId"] = long_1.default.fromString(this.ecBlockId, true);
@@ -299,10 +299,10 @@ var TransactionImpl = /** @class */ (function () {
         if (attachment.getSize() > 0) {
             var attachmentBytes = bytebuffer_1.default.allocate(attachment.getSize()).order(bytebuffer_1.default.LITTLE_ENDIAN);
             attachment.putBytes(attachmentBytes);
-            raw["attachmentBytes"] = new Buffer(attachmentBytes.buffer);
+            raw["attachmentBytes"] = Buffer.from(attachmentBytes.buffer);
         }
         else {
-            raw["attachmentBytes"] = new Buffer(0);
+            raw["attachmentBytes"] = Buffer.allocUnsafeSlow(0);
         }
         var totalSize = 0;
         for (var i = 1; i < this.appendages.length; i++) {
@@ -315,7 +315,7 @@ var TransactionImpl = /** @class */ (function () {
             raw["appendixBytes"] = new Buffer(appendixBytes.buffer);
         }
         else {
-            raw["appendixBytes"] = new Buffer(0);
+            raw["appendixBytes"] = Buffer.allocUnsafeSlow(0);
         }
         return raw;
     };
@@ -476,7 +476,7 @@ var TransactionImpl = /** @class */ (function () {
 }());
 exports.TransactionImpl = TransactionImpl;
 function emptyArrayToNull(array) {
-    if (array == null)
+    if (array == null || array == undefined)
         return null;
     for (var i = 0; i < array.length; i++) {
         if (array[i] != 0)
