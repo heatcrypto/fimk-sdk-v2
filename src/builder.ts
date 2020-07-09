@@ -170,7 +170,7 @@ export class TransactionImpl {
 
   constructor(builder: Builder, secretPhrase: string | null) {
     this.appendages = []
-    this.isTestnet = builder._isTestnet!
+    this.isTestnet = builder._isTestnet || false
     this.timestamp = builder._timestamp!
     this.type = builder._type!
     this.version = builder._version
@@ -331,11 +331,11 @@ export class TransactionImpl {
     raw["version"] = this.version
     raw["timestamp"] = this.timestamp
     raw["deadline"] = this.deadline
-    raw["senderPublicKey"] = this.senderPublicKey ? new Buffer(this.senderPublicKey) : new Buffer(0)
+    raw["senderPublicKey"] = this.senderPublicKey ? Buffer.from(this.senderPublicKey) : Buffer.allocUnsafeSlow(0)
     raw["recipientId"] = Long.fromString(this.recipientId, true)
     raw["amountHQT"] = Long.fromString(this.amountHQT)
     raw["feeHQT"] = Long.fromString(this.feeHQT)
-    raw["signature"] = this.signature ? new Buffer(this.signature) : new Buffer(0)
+    raw["signature"] = this.signature ? Buffer.from(this.signature) : Buffer.allocUnsafeSlow(0)
     raw["flags"] = this.getFlags()
     raw["ecBlockHeight"] = this.ecBlockHeight
     raw["ecBlockId"] = Long.fromString(this.ecBlockId, true)
@@ -345,9 +345,9 @@ export class TransactionImpl {
         ByteBuffer.LITTLE_ENDIAN
       )
       attachment.putBytes(attachmentBytes)
-      raw["attachmentBytes"] = new Buffer(attachmentBytes.buffer)
+      raw["attachmentBytes"] = Buffer.from(attachmentBytes.buffer)
     } else {
-      raw["attachmentBytes"] = new Buffer(0)
+      raw["attachmentBytes"] = Buffer.allocUnsafeSlow(0)
     }
     let totalSize = 0
     for (let i = 1; i < this.appendages.length; i++) {
@@ -358,7 +358,7 @@ export class TransactionImpl {
       for (let i = 1; i < this.appendages.length; i++) this.appendages[i].putBytes(appendixBytes)
       raw["appendixBytes"] = new Buffer(appendixBytes.buffer)
     } else {
-      raw["appendixBytes"] = new Buffer(0)
+      raw["appendixBytes"] = Buffer.allocUnsafeSlow(0)
     }
     return raw
   }
@@ -536,7 +536,7 @@ export class TransactionImpl {
 }
 
 function emptyArrayToNull(array: number[]) {
-  if (array == null) return null
+  if (array == null || array == undefined) return null
   for (let i = 0; i < array.length; i++) {
     if (array[i] != 0) return array
   }

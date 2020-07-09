@@ -21,20 +21,23 @@
  * SOFTWARE.
  * */
 import { passphraseEncrypt, PassphraseEncryptedMessage, passphraseDecrypt } from "./crypto"
-import { isDefined, convertToQNT } from "./utils"
-import { TransactionImpl, Builder } from "./builder"
-import { Transaction } from "./transaction"
+import * as _attachment from "./attachment"
+import * as builder from "./builder"
+import * as transaction from "./transaction"
+import { isDefined, convertToQNT } from './utils'
 import {
   AssetTransfer,
   ColoredCoinsAskOrderPlacement,
   ColoredCoinsBidOrderPlacement,
   ColoredCoinsAskOrderCancellation,
   ColoredCoinsBidOrderCancellation,
-  ORDINARY_PAYMENT,
-  ARBITRARY_MESSAGE
 } from "./attachment"
 import { Fee } from "./fee"
 
+export const attachment = _attachment
+export const Builder = builder.Builder
+export const TransactionImpl = builder.TransactionImpl
+export const Transaction = transaction.Transaction
 export interface ConfigArgs {
   isTestnet?: boolean
   baseURL?: string
@@ -81,7 +84,7 @@ export class FimkSDK {
       recipientOrRecipientPublicKey,
       new Builder()
         .isTestnet(this.config.isTestnet)
-        .attachment(ORDINARY_PAYMENT)
+        .attachment(attachment.ORDINARY_PAYMENT)
         .amountHQT(convertToQNT(amount))
     )
   }
@@ -92,7 +95,7 @@ export class FimkSDK {
       recipientOrRecipientPublicKey,
       new Builder()
         .isTestnet(this.config.isTestnet)
-        .attachment(ARBITRARY_MESSAGE)
+        .attachment(attachment.ARBITRARY_MESSAGE)
         .amountHQT("0")
     ).publicMessage(message)
   }
@@ -103,7 +106,7 @@ export class FimkSDK {
       recipientPublicKey,
       new Builder()
         .isTestnet(this.config.isTestnet)
-        .attachment(ARBITRARY_MESSAGE)
+        .attachment(attachment.ARBITRARY_MESSAGE)
         .amountHQT("0")
     ).privateMessage(message)
   }
@@ -114,7 +117,7 @@ export class FimkSDK {
       null, // if null and provide private message then to send encrypted message to self
       new Builder()
         .isTestnet(this.config.isTestnet)
-        .attachment(ARBITRARY_MESSAGE)
+        .attachment(attachment.ARBITRARY_MESSAGE)
         .amountHQT("0")
     ).privateMessageToSelf(message)
   }
