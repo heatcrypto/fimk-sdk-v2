@@ -1,3 +1,3 @@
-# heat-sdk-v2
+# FIMK SDK
 
-Optimized NodeJS only port of heat-sdk
+FIMK support libraries for Node.js and the browser
