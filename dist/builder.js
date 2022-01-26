@@ -264,10 +264,12 @@ var TransactionImpl = /** @class */ (function () {
             buffer.writeByte(0); // referencedTransactionFullHash
         for (var i = 0; i < 64; i++)
             buffer.writeByte(this.signature ? this.signature[i] : 0);
-        buffer.writeInt(this.getFlags());
-        buffer.writeInt(this.ecBlockHeight);
-        var ecBlockId = long_1.default.fromString(this.ecBlockId, true);
-        buffer.writeInt64(ecBlockId);
+        if (this.version > 0) {
+            buffer.writeInt(this.getFlags());
+            buffer.writeInt(this.ecBlockHeight);
+            var ecBlockId = long_1.default.fromString(this.ecBlockId, true);
+            buffer.writeInt64(ecBlockId);
+        }
         this.appendages.forEach(function (appendage) {
             appendage.putBytes(buffer);
         });
@@ -415,24 +417,33 @@ var TransactionImpl = /** @class */ (function () {
         subtype = subtype & 0x0f;
         var timestamp = buffer.readInt(); // 4
         var deadline = buffer.readShort(); // 2
+        var recipientId = buffer.readLong(); // 8
         var senderPublicKey = []; // 32
         for (var i = 0; i < 32; i++)
             senderPublicKey[i] = buffer.readByte();
-        var recipientId = buffer.readLong(); // 8
         var amountHQT = buffer.readLong(); // 8
         var feeHQT = buffer.readLong(); // 8
+        var referencedTransactionFullHash = []; // 32
+        for (var i = 0; i < 32; i++)
+            referencedTransactionFullHash[i] = buffer.readByte();
         var signature = []; // 64
         for (var i = 0; i < 64; i++)
             signature[i] = buffer.readByte();
         signature = emptyArrayToNull(signature);
-        var flags = buffer.readInt(); // 4
-        var ecBlockHeight = buffer.readInt(); // 4
-        var ecBlockId = buffer.readLong(); // 8
+        var flags = 0; // 4
+        var ecBlockHeight = 0; // 4
+        var ecBlockId = long_1.default.fromNumber(0); // 8
+        if (version > 0) {
+            flags = buffer.readInt();
+            ecBlockHeight = buffer.readInt();
+            ecBlockId = buffer.readLong();
+        }
         var transactionType = transaction_type_1.TransactionType.findTransactionType(type, subtype);
         if (!transactionType)
             throw new Error("Transaction type not implemented or undefined");
         var builder = new Builder()
             .version(version)
+            .isTestnet(isTestnet)
             .senderPublicKey(senderPublicKey)
             .amountHQT(amountHQT.toUnsigned().toString())
             .feeHQT(feeHQT.toUnsigned().toString())
