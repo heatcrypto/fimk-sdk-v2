@@ -503,6 +503,7 @@ export class TransactionImpl {
     if (!transactionType) throw new Error("Transaction type not implemented or undefined")
     let builder = new Builder()
       .version(version)
+    Add parameter isTestnet for parsing transaction      .isTestnet(isTestnet!)
       .senderPublicKey(senderPublicKey)
       .amountHQT(amountHQT.toUnsigned().toString())
       .feeHQT(feeHQT.toUnsigned().toString())

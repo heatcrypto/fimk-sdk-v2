@@ -238,7 +238,7 @@ describe("Transaction builder", () => {
       .then(t => {
         let transaction = t.getTransaction()
         let bytes = transaction!.getBytesAsHex()
-        let parsedTxn = TransactionImpl.parse(bytes)
+        let parsedTxn = TransactionImpl.parse(bytes, fimkSDK.config.isTestnet)
         expect(parsedTxn).toBeInstanceOf(TransactionImpl)
         return expect(parsedTxn.getJSONObject()).toEqual(transaction!.getJSONObject())
       })
