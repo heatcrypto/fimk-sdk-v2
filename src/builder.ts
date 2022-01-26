@@ -156,6 +156,7 @@ export class TransactionImpl {
   private recipientId: string
   private amountHQT: string
   private feeHQT: string
+  //todo add private referencedTransactionFullHash: Array<number>
   private message: AppendixMessage
   private encryptedMessage: AppendixEncryptedMessage
   private encryptToSelfMessage: AppendixEncryptToSelfMessage
@@ -302,11 +303,13 @@ export class TransactionImpl {
 
     for (let i = 0; i < 64; i++) buffer.writeByte(this.signature ? this.signature[i] : 0)
 
-    buffer.writeInt(this.getFlags())
-    buffer.writeInt(this.ecBlockHeight)
+    if (this.version > 0) {
+      buffer.writeInt(this.getFlags())
+      buffer.writeInt(this.ecBlockHeight)
 
-    let ecBlockId = Long.fromString(this.ecBlockId, true)
-    buffer.writeInt64(ecBlockId)
+      let ecBlockId = Long.fromString(this.ecBlockId, true)
+      buffer.writeInt64(ecBlockId)
+    }
 
     this.appendages.forEach(appendage => {
       appendage.putBytes(buffer)
@@ -478,19 +481,24 @@ export class TransactionImpl {
     subtype = subtype & 0x0f
     let timestamp = buffer.readInt() // 4
     let deadline = buffer.readShort() // 2
+    let recipientId = buffer.readLong() // 8
     let senderPublicKey: number[] = [] // 32
     for (let i = 0; i < 32; i++) senderPublicKey[i] = buffer.readByte()
-
-    let recipientId = buffer.readLong() // 8
     let amountHQT = buffer.readLong() // 8
     let feeHQT = buffer.readLong() // 8
+    let referencedTransactionFullHash: number[] = [] // 32
+    for (let i = 0; i < 32; i++) referencedTransactionFullHash[i] = buffer.readByte()
     let signature: number[] = [] // 64
     for (let i = 0; i < 64; i++) signature[i] = buffer.readByte()
     signature = <number[]>emptyArrayToNull(signature)
-    let flags = buffer.readInt() // 4
-    let ecBlockHeight = buffer.readInt() // 4
-    let ecBlockId = buffer.readLong() // 8
-
+    let flags = 0 // 4
+    let ecBlockHeight = 0 // 4
+    let ecBlockId = Long.fromNumber(0) // 8
+    if (version > 0) {
+      flags = buffer.readInt()
+      ecBlockHeight = buffer.readInt()
+      ecBlockId = buffer.readLong()
+    }
     let transactionType = TransactionType.findTransactionType(type, subtype)
     if (!transactionType) throw new Error("Transaction type not implemented or undefined")
     let builder = new Builder()
