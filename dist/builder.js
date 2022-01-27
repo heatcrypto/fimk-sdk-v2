@@ -180,8 +180,9 @@ var TransactionImpl = /** @class */ (function () {
         this.appendages.forEach(function (appendage) {
             _this.appendagesSize += appendage.getSize();
         });
-        if (builder._signature && secretPhrase != null)
+        if (builder._signature && secretPhrase != null) {
             throw new Error("Transaction is already signed");
+        }
         else if (secretPhrase) {
             var unsignedBytes = this.getUnsignedBytes();
             var unsignedHex = converters_1.byteArrayToHexString(unsignedBytes);

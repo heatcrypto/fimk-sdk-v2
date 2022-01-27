@@ -115,10 +115,6 @@ var AssetBase = /** @class */ (function (_super) {
         _super.prototype.parse.call(this, buffer);
         this.assetId = buffer.readInt64();
         this.quantity = buffer.readInt64();
-        var len = buffer.readShort();
-        var bytes = [];
-        for (var i = 0; i < len; i++)
-            bytes.push(buffer.readByte());
         return this;
     };
     AssetBase.prototype.putMyBytes = function (buffer) {

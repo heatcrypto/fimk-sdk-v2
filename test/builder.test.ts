@@ -47,9 +47,11 @@ import {
   ORDINARY_PAYMENT
 } from "../src/attachment"
 import { byteArrayToHexString, hexStringToByteArray, stringToHexString } from "../src/converters"
-import { Configuration, FimkSDK } from "../src/fimk-sdk"
+import {attachment, Configuration, FimkSDK} from "../src/fimk-sdk"
 // import { HeatApi } from "./heat-api"
 import { signBytes } from "../src/crypto"
+import {convertToQNT, epochTime} from "../src/utils";
+import {Fee} from "../src/fee";
 
 const fimkSDK = new FimkSDK(
   new Configuration({
@@ -272,22 +274,22 @@ describe("Transaction builder", () => {
     })
   })
 */
-  /*xit("can parse 'Asset Transfer' transaction bytes on the server", done => {
-    let builder = new Builder()
-      .attachment(new AssetTransfer().init(ASSET_1.ID, "100"))
-      .amountHQT("0")
-      .feeHQT("50000000000")
-    checkapplicability(new Transaction(fimkSDK, "123", builder)).then(response => {
-      expect(response).toEqual(
-        expect.objectContaining({
-          fee: "50000000000",
-          type: 2,
-          subtype: 2
-        })
-      )
-      done()
-    })
-  })*/
+  it("can parse 'Asset Transfer' transaction", async done => {
+    const txn = new Transaction(
+        fimkSDK,
+        "12345",
+        new Builder()
+            .isTestnet(fimkSDK.config.isTestnet)
+            .attachment(new AssetTransfer().init(ASSET_1.ID, "100"))
+            .amountHQT("0")
+            .feeHQT(Fee.ASSET_TRANSFER_FEE)
+    )
+    const transaction = await txn.sign("qwerty")
+    const bytesHex = transaction.getTransaction()!.getBytesAsHex()
+    const parsedTxn = TransactionImpl.parse(bytesHex, fimkSDK.config.isTestnet)
+    expect(parsedTxn).toBeInstanceOf(TransactionImpl)
+    done()
+  })
 
   /*it("can parse 'Ask Order Placement' transaction bytes on the server", done => {
     let builder = new Builder()
