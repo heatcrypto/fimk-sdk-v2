@@ -216,8 +216,9 @@ export class TransactionImpl {
       this.appendagesSize += appendage.getSize()
     })
 
-    if (builder._signature && secretPhrase != null) throw new Error("Transaction is already signed")
-    else if (secretPhrase) {
+    if (builder._signature && secretPhrase != null) {
+      throw new Error("Transaction is already signed")
+    } else if (secretPhrase) {
       let unsignedBytes = this.getUnsignedBytes()
       let unsignedHex = byteArrayToHexString(unsignedBytes)
       let signatureHex = signBytes(unsignedHex, stringToHexString(secretPhrase))
@@ -503,6 +504,7 @@ export class TransactionImpl {
     if (!transactionType) throw new Error("Transaction type not implemented or undefined")
     let builder = new Builder()
       .version(version)
+      .isTestnet(isTestnet!)
       .senderPublicKey(senderPublicKey)
       .amountHQT(amountHQT.toUnsigned().toString())
       .feeHQT(feeHQT.toUnsigned().toString())

@@ -102,9 +102,6 @@ export abstract class AssetBase extends AbstractAppendix {
     super.parse(buffer)
     this.assetId = buffer.readInt64()
     this.quantity = buffer.readInt64()
-    const len = buffer.readShort()
-    const bytes: Array<number> = []
-    for (let i = 0; i < len; i++) bytes.push(buffer.readByte())
     return this
   }
 
