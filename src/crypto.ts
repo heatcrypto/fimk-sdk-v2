@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-
+ const Big = require('big.js')
 import {
   byteArrayToHexString,
   byteArrayToShortArray,
@@ -33,7 +33,6 @@ import {
   stringToHexString,
   wordArrayToByteArray
 } from "./converters"
-import Big from "big.js"
 import { gzip, inflate } from "pako"
 import Long from "long"
 import { randomBytes } from "./random-bytes"
