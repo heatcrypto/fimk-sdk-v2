@@ -26,7 +26,7 @@ exports.passphraseDecrypt = exports.passphraseEncrypt = exports.PassphraseEncryp
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * */
-var Big = require('big.js');
+var Big = require('big.js').Big;
 var converters_1 = require("./converters");
 var pako_1 = require("pako");
 var long_1 = __importDefault(require("long"));
