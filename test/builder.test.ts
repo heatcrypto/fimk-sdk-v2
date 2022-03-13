@@ -235,12 +235,12 @@ describe("Transaction builder", () => {
   it("can parse transaction bytes", () => {
     return fimkSDK
       .payment("12345", "100.2")
-      .publicMessage("Hello world")
+      // .publicMessage("Hello world")
       .sign("secret phrase")
       .then(t => {
-        let transaction = t.getTransaction()
-        let bytes = transaction!.getBytesAsHex()
-        let parsedTxn = TransactionImpl.parse(bytes, fimkSDK.config.isTestnet)
+        const transaction = t.getTransaction()
+        const bytes = transaction!.getBytesAsHex()
+        const parsedTxn = TransactionImpl.parse(bytes, fimkSDK.config.isTestnet)
         expect(parsedTxn).toBeInstanceOf(TransactionImpl)
         return expect(parsedTxn.getJSONObject()).toEqual(transaction!.getJSONObject())
       })

@@ -48,6 +48,8 @@ export abstract class EmptyAttachment extends AbstractAppendix implements Attach
     return this.getMySize()
   }
 
+  public putBytes(buffer: ByteBuffer) {}
+
   putMyBytes(buffer: ByteBuffer) {}
 
   putMyJSON(json: { [key: string]: any }) {}
