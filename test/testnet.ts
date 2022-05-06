@@ -33,6 +33,9 @@ export const ASSET_1 = { ID: "9827585868724319515", ISSUER: ACCOUNT_1 }
 // Asset POW Power q=100_500 decimals=0 dillutable=true
 export const ASSET_2 = { ID: "3722848536705943191", ISSUER: ACCOUNT_2 }
 export const ASSET_3 = undefined
+
+export const GOODS_1 = { ID: "1234567890", ISSUER: ACCOUNT_1 }
+
 export const OBJECTS_BY_ID = {}
 
 // map ID -> object_with_this_id

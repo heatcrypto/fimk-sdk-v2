@@ -21,11 +21,13 @@
  * SOFTWARE.
  * */
 import { Appendix, AbstractAppendix } from "./appendix"
-import { TransactionType, ORDINARY_PAYMENT_TRANSACTION_TYPE, ARBITRARY_MESSAGE_TRANSACTION_TYPE, 
-  COLORED_COINS_ASSET_TRANSFER_TRANSACTION_TYPE, 
+import {
+  TransactionType, ORDINARY_PAYMENT_TRANSACTION_TYPE, ARBITRARY_MESSAGE_TRANSACTION_TYPE,
+  COLORED_COINS_ASSET_TRANSFER_TRANSACTION_TYPE,
   COLORED_COINS_ASK_ORDER_PLACEMENT_TRANSACTION_TYPE, COLORED_COINS_BID_ORDER_PLACEMENT_TRANSACTION_TYPE,
-  ASK_ORDER_CANCELLATION_TRANSACTION_TYPE, BID_ORDER_CANCELLATION_TRANSACTION_TYPE, 
-  EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE } from "./transaction-type"
+  ASK_ORDER_CANCELLATION_TRANSACTION_TYPE, BID_ORDER_CANCELLATION_TRANSACTION_TYPE,
+  EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE, DIGITAL_GOODS_PURCHASE_TRANSACTION_TYPE
+} from "./transaction-type"
 import { Fee } from "./fee"
 import Long from "long"
 import ByteBuffer from "bytebuffer"
@@ -367,6 +369,71 @@ export class AccountControlEffectiveBalanceLeasing extends AbstractAppendix
   getPeriod(): number {
     return this.period!
   }
+}
+
+export class DigitalGoodsPurchaseAttachement extends AbstractAppendix implements Attachment {
+
+  private goodsId: Long | undefined
+  private quantity: number | undefined
+  private priceNQT: Long | undefined
+  private deliveryDeadlineTimestamp: number | undefined
+
+  init(goodsId: string, quantity: number, priceNQT: string, deliveryDeadlineTimestamp: number) {
+    this.goodsId = Long.fromString(goodsId)
+    this.quantity = quantity
+    this.priceNQT = Long.fromString(priceNQT)
+    this.deliveryDeadlineTimestamp = deliveryDeadlineTimestamp
+    return this
+  }
+
+  getMySize(): number {
+    return 8 + 4 + 8 + 4
+  }
+
+  public parse(buffer: ByteBuffer) {
+    super.parse(buffer)
+    this.goodsId = buffer.readInt64()
+    this.quantity = buffer.readInt32()
+    this.priceNQT = buffer.readInt64()
+    this.deliveryDeadlineTimestamp = buffer.readInt32()
+    return this
+  }
+
+  putMyBytes(buffer: ByteBuffer): void {
+    buffer.writeInt64(this.goodsId!)
+    buffer.writeInt32(this.quantity!)
+    buffer.writeInt64(this.priceNQT!)
+    buffer.writeInt32(this.deliveryDeadlineTimestamp!)
+  }
+
+  parseJSON(json: { [key: string]: any }) {
+    super.parseJSON(json)
+    this.goodsId = Long.fromString(json["goods"], true)
+    this.quantity = json["quantity"]
+    this.priceNQT = Long.fromString(json["priceNQT"], false)
+    this.deliveryDeadlineTimestamp = json["deliveryDeadlineTimestamp"]
+    return this
+  }
+
+  putMyJSON(json: { [key: string]: any }): void {
+    json["goodsId"] = this.goodsId!.toUnsigned().toString()
+    json["quantity"] = this.quantity!.toString()
+    json["priceNQT"] = this.priceNQT!.toString()
+    json["deliveryDeadlineTimestamp"] = this.deliveryDeadlineTimestamp!.toString()
+  }
+
+  getAppendixName() {
+    return "DigitalGoodsPurchase"
+  }
+
+  getTransactionType() {
+    return DIGITAL_GOODS_PURCHASE_TRANSACTION_TYPE
+  }
+
+  getFee() {
+    return Fee.DIGITAL_GOODS_PURCHASE_FEE
+  }
+
 }
 
 export const ORDINARY_PAYMENT = new Payment()

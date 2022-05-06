@@ -68,6 +68,9 @@ export abstract class TransactionType {
     } else if (type == this.TYPE_ACCOUNT_CONTROL) {
       if (subtype == this.SUBTYPE_ACCOUNT_CONTROL_EFFECTIVE_BALANCE_LEASING)
         return EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE
+    } else if (type == this.TYPE_DIGITAL_GOODS) {
+      if (subtype == this.SUBTYPE_DIGITAL_GOODS_PURCHASE)
+        return DIGITAL_GOODS_PURCHASE_TRANSACTION_TYPE
     }
   }
 
@@ -226,6 +229,27 @@ export class EffectiveBalanceLeasing extends AccountControl {
   }
 }
 
+export abstract class DigitalGoods extends TransactionType {
+  getType(): number {
+    return TransactionType.TYPE_DIGITAL_GOODS
+  }
+}
+
+export class DigitalGoodsPurchase extends DigitalGoods {
+  getSubtype() {
+    return TransactionType.SUBTYPE_DIGITAL_GOODS_PURCHASE
+  }
+  parseAttachment(buffer: ByteBuffer) {
+    return new attachment.DigitalGoodsPurchaseAttachement().parse(buffer)
+  }
+  parseAttachmentJSON(json: { [key: string]: any }) {
+    return new attachment.DigitalGoodsPurchaseAttachement().parseJSON(json)
+  }
+  canHaveRecipient(): boolean {
+    return true;
+  }
+}
+
 export const ORDINARY_PAYMENT_TRANSACTION_TYPE = new OrdinaryPayment()
 export const ARBITRARY_MESSAGE_TRANSACTION_TYPE = new ArbitraryMessage()
 export const COLORED_COINS_ASSET_TRANSFER_TRANSACTION_TYPE = new AssetTransfer()
@@ -234,3 +258,4 @@ export const COLORED_COINS_BID_ORDER_PLACEMENT_TRANSACTION_TYPE = new BidOrderPl
 export const ASK_ORDER_CANCELLATION_TRANSACTION_TYPE = new AskOrderCancellation()
 export const BID_ORDER_CANCELLATION_TRANSACTION_TYPE = new BidOrderCancellation()
 export const EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE = new EffectiveBalanceLeasing()
+export const DIGITAL_GOODS_PURCHASE_TRANSACTION_TYPE = new DigitalGoodsPurchase()
