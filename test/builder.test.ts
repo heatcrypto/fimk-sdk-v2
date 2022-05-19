@@ -27,7 +27,7 @@
 To run tests in the file  test/testnet.ts  must be actual values for Testnet
  */
 import "./jasmine"
-import { ASSET_1, ASSET_2, ACCOUNT_21 } from "./testnet"
+import {ASSET_1, ASSET_2, ACCOUNT_21, GOODS_1} from "./testnet"
 import { Builder, TransactionImpl } from "../src/builder"
 import { Transaction } from "../src/transaction"
 import {
@@ -40,7 +40,7 @@ import {
   ColoredCoinsAskOrderCancellation,
   ColoredCoinsAskOrderPlacement,
   ColoredCoinsBidOrderCancellation,
-  ColoredCoinsBidOrderPlacement,
+  ColoredCoinsBidOrderPlacement, DigitalGoodsPurchaseAttachement,
   // ColoredCoinsWhitelistAccountAddition,
   // ColoredCoinsWhitelistAccountRemoval,
   // ColoredCoinsWhitelistMarket,
@@ -283,6 +283,23 @@ describe("Transaction builder", () => {
             .attachment(new AssetTransfer().init(ASSET_1.ID, "100"))
             .amountHQT("0")
             .feeHQT(Fee.ASSET_TRANSFER_FEE)
+    )
+    const transaction = await txn.sign("qwerty")
+    const bytesHex = transaction.getTransaction()!.getBytesAsHex()
+    const parsedTxn = TransactionImpl.parse(bytesHex, fimkSDK.config.isTestnet)
+    expect(parsedTxn).toBeInstanceOf(TransactionImpl)
+    done()
+  })
+
+  it("can parse 'Digital Goods Purchase' transaction", async done => {
+    const txn = new Transaction(
+        fimkSDK,
+        "12345",
+        new Builder()
+            .isTestnet(fimkSDK.config.isTestnet)
+            .attachment(new DigitalGoodsPurchaseAttachement().init(GOODS_1.ID, 4, "100500", 111222333))
+            .amountHQT("0")
+            .feeHQT(Fee.DIGITAL_GOODS_PURCHASE_FEE)
     )
     const transaction = await txn.sign("qwerty")
     const bytesHex = transaction.getTransaction()!.getBytesAsHex()

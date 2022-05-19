@@ -21,6 +21,7 @@
  * SOFTWARE.
  * */
 import { HeatConstants } from "./constants"
+import {DigitalGoodsPurchaseAttachement} from "./attachment";
 
 export class Fee {
   public static DEFAULT = (HeatConstants.ONE_FIMK / 10).toString()
@@ -29,6 +30,7 @@ export class Fee {
   public static ORDER_PLACEMENT_FEE = Fee.DEFAULT
   public static ORDER_CANCELLATION_FEE = Fee.DEFAULT
   public static EFFECTIVE_BALANCE_LEASING_FEE = Fee.DEFAULT
+  public static DIGITAL_GOODS_PURCHASE_FEE = Fee.DEFAULT
 
   public static MESSAGE_APPENDIX_FEE = "0"
   public static ENCRYPTED_MESSAGE_APPENDIX_FEE = "0"
