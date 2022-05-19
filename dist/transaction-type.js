@@ -32,7 +32,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE = exports.BID_ORDER_CANCELLATION_TRANSACTION_TYPE = exports.ASK_ORDER_CANCELLATION_TRANSACTION_TYPE = exports.COLORED_COINS_BID_ORDER_PLACEMENT_TRANSACTION_TYPE = exports.COLORED_COINS_ASK_ORDER_PLACEMENT_TRANSACTION_TYPE = exports.COLORED_COINS_ASSET_TRANSFER_TRANSACTION_TYPE = exports.ARBITRARY_MESSAGE_TRANSACTION_TYPE = exports.ORDINARY_PAYMENT_TRANSACTION_TYPE = exports.EffectiveBalanceLeasing = exports.AccountControl = exports.ColoredCoinsWhitelist = exports.BidOrderCancellation = exports.AskOrderCancellation = exports.ColoredCoinsOrderCancellation = exports.BidOrderPlacement = exports.AskOrderPlacement = exports.ColoredCoinsOrderPlacement = exports.AssetTransfer = exports.ColoredCoins = exports.ArbitraryMessage = exports.OrdinaryPayment = exports.TransactionType = void 0;
+exports.DIGITAL_GOODS_PURCHASE_TRANSACTION_TYPE = exports.EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE = exports.BID_ORDER_CANCELLATION_TRANSACTION_TYPE = exports.ASK_ORDER_CANCELLATION_TRANSACTION_TYPE = exports.COLORED_COINS_BID_ORDER_PLACEMENT_TRANSACTION_TYPE = exports.COLORED_COINS_ASK_ORDER_PLACEMENT_TRANSACTION_TYPE = exports.COLORED_COINS_ASSET_TRANSFER_TRANSACTION_TYPE = exports.ARBITRARY_MESSAGE_TRANSACTION_TYPE = exports.ORDINARY_PAYMENT_TRANSACTION_TYPE = exports.DigitalGoodsPurchase = exports.DigitalGoods = exports.EffectiveBalanceLeasing = exports.AccountControl = exports.ColoredCoinsWhitelist = exports.BidOrderCancellation = exports.AskOrderCancellation = exports.ColoredCoinsOrderCancellation = exports.BidOrderPlacement = exports.AskOrderPlacement = exports.ColoredCoinsOrderPlacement = exports.AssetTransfer = exports.ColoredCoins = exports.ArbitraryMessage = exports.OrdinaryPayment = exports.TransactionType = void 0;
 /**
  * The MIT License (MIT)
  * Copyright (c) 2020 heatcrypto.
@@ -85,6 +85,10 @@ var TransactionType = /** @class */ (function () {
         else if (type == this.TYPE_ACCOUNT_CONTROL) {
             if (subtype == this.SUBTYPE_ACCOUNT_CONTROL_EFFECTIVE_BALANCE_LEASING)
                 return exports.EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE;
+        }
+        else if (type == this.TYPE_DIGITAL_GOODS) {
+            if (subtype == this.SUBTYPE_DIGITAL_GOODS_PURCHASE)
+                return exports.DIGITAL_GOODS_PURCHASE_TRANSACTION_TYPE;
         }
     };
     TransactionType.prototype.mustHaveRecipient = function () {
@@ -321,6 +325,37 @@ var EffectiveBalanceLeasing = /** @class */ (function (_super) {
     return EffectiveBalanceLeasing;
 }(AccountControl));
 exports.EffectiveBalanceLeasing = EffectiveBalanceLeasing;
+var DigitalGoods = /** @class */ (function (_super) {
+    __extends(DigitalGoods, _super);
+    function DigitalGoods() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DigitalGoods.prototype.getType = function () {
+        return TransactionType.TYPE_DIGITAL_GOODS;
+    };
+    return DigitalGoods;
+}(TransactionType));
+exports.DigitalGoods = DigitalGoods;
+var DigitalGoodsPurchase = /** @class */ (function (_super) {
+    __extends(DigitalGoodsPurchase, _super);
+    function DigitalGoodsPurchase() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DigitalGoodsPurchase.prototype.getSubtype = function () {
+        return TransactionType.SUBTYPE_DIGITAL_GOODS_PURCHASE;
+    };
+    DigitalGoodsPurchase.prototype.parseAttachment = function (buffer) {
+        return new attachment.DigitalGoodsPurchaseAttachement().parse(buffer);
+    };
+    DigitalGoodsPurchase.prototype.parseAttachmentJSON = function (json) {
+        return new attachment.DigitalGoodsPurchaseAttachement().parseJSON(json);
+    };
+    DigitalGoodsPurchase.prototype.canHaveRecipient = function () {
+        return true;
+    };
+    return DigitalGoodsPurchase;
+}(DigitalGoods));
+exports.DigitalGoodsPurchase = DigitalGoodsPurchase;
 exports.ORDINARY_PAYMENT_TRANSACTION_TYPE = new OrdinaryPayment();
 exports.ARBITRARY_MESSAGE_TRANSACTION_TYPE = new ArbitraryMessage();
 exports.COLORED_COINS_ASSET_TRANSFER_TRANSACTION_TYPE = new AssetTransfer();
@@ -329,3 +364,4 @@ exports.COLORED_COINS_BID_ORDER_PLACEMENT_TRANSACTION_TYPE = new BidOrderPlaceme
 exports.ASK_ORDER_CANCELLATION_TRANSACTION_TYPE = new AskOrderCancellation();
 exports.BID_ORDER_CANCELLATION_TRANSACTION_TYPE = new BidOrderCancellation();
 exports.EFFECTIVE_BALANCE_LEASING_TRANSACTION_TYPE = new EffectiveBalanceLeasing();
+exports.DIGITAL_GOODS_PURCHASE_TRANSACTION_TYPE = new DigitalGoodsPurchase();
