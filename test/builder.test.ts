@@ -310,6 +310,8 @@ describe("Transaction builder", () => {
     let attachment2  = parsedTxn.getJSONObject().attachment
     let decrypted = decryptMessage(attachment2.data, attachment2.nonce, pubKeyHex, "secret")
     expect(decrypted).toEqual("qwerty")
+    decrypted = decryptMessage(attachment2.data, attachment2.nonce, secretPhraseToPublicKey("secret"), "abc")
+    expect(decrypted).toEqual("qwerty")
 
     done()
   })
