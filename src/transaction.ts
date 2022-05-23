@@ -99,19 +99,18 @@ export class Transaction {
         if (isPrivate || isPrivateToSelf) {
           if (!recipientPublicKeyHex) throw new Error("Recipient public key not provided")
           encryptMessage(
-            isPrivate ? this.privateMessage_! : this.privateMessageToSelf_!,
-            recipientPublicKeyHex,
-            secretPhrase
-          )
-            .then(encryptedMessage => {
-              let a = (isPrivate
-                ? new AppendixEncryptedMessage()
-                : new AppendixEncryptToSelfMessage()
-              ).init(encryptedMessage, !this.messageIsBinary_)
-              this.builder.encryptToSelfMessage(a)
-              resolve() // resolve in encryptMessage callback
-            })
-            .catch(reject)
+              isPrivate ? this.privateMessage_! : this.privateMessageToSelf_!,
+              recipientPublicKeyHex,
+              secretPhrase
+          ).then(encryptedMessage => {
+            if (isPrivate) {
+              this.builder.encryptMessage(new AppendixEncryptedMessage().init(encryptedMessage, !this.messageIsBinary_))
+            }
+            if (isPrivateToSelf) {
+              this.builder.encryptToSelfMessage(new AppendixEncryptToSelfMessage().init(encryptedMessage, !this.messageIsBinary_))
+            }
+            resolve() // resolve in encryptMessage callback
+          }).catch(reject)
           return // exit here to not touch the final resolve
         }
       }

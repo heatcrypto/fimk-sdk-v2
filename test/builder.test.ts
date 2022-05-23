@@ -294,13 +294,13 @@ describe("Transaction builder", () => {
   it("can parse 'Digital Goods Purchase' transaction", async done => {
     const txn = new Transaction(
         fimkSDK,
-        "12345",
+        "4376219788e7d1946ad377196fd7103958d3d6d6618dc93d2d0d6b4f717b641d",
         new Builder()
             .isTestnet(fimkSDK.config.isTestnet)
             .attachment(new DigitalGoodsPurchaseAttachement().init(GOODS_1.ID, 4, "100500", 111222333))
             .amountHQT("0")
             .feeHQT(Fee.DIGITAL_GOODS_PURCHASE_FEE)
-    )
+    ).privateMessage("qwerty")
     const transaction = await txn.sign("qwerty")
     const bytesHex = transaction.getTransaction()!.getBytesAsHex()
     const parsedTxn = TransactionImpl.parse(bytesHex, fimkSDK.config.isTestnet)
