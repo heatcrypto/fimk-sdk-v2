@@ -49,7 +49,7 @@ import {
 import { byteArrayToHexString, hexStringToByteArray, stringToHexString } from "../src/converters"
 import {attachment, Configuration, FimkSDK} from "../src/fimk-sdk"
 // import { HeatApi } from "./heat-api"
-import { signBytes } from "../src/crypto"
+import {decryptMessage, IEncryptedMessage, secretPhraseToPublicKey, signBytes} from "../src/crypto"
 import {convertToQNT, epochTime} from "../src/utils";
 import {Fee} from "../src/fee";
 
@@ -292,19 +292,25 @@ describe("Transaction builder", () => {
   })
 
   it("can parse 'Digital Goods Purchase' transaction", async done => {
+    let pubKeyHex = secretPhraseToPublicKey("abc")
     const txn = new Transaction(
         fimkSDK,
-        "4376219788e7d1946ad377196fd7103958d3d6d6618dc93d2d0d6b4f717b641d",
+        pubKeyHex,
         new Builder()
             .isTestnet(fimkSDK.config.isTestnet)
             .attachment(new DigitalGoodsPurchaseAttachement().init(GOODS_1.ID, 4, "100500", 111222333))
             .amountHQT("0")
             .feeHQT(Fee.DIGITAL_GOODS_PURCHASE_FEE)
     ).privateMessage("qwerty")
-    const transaction = await txn.sign("qwerty")
+    const transaction = await txn.sign("secret")
     const bytesHex = transaction.getTransaction()!.getBytesAsHex()
     const parsedTxn = TransactionImpl.parse(bytesHex, fimkSDK.config.isTestnet)
     expect(parsedTxn).toBeInstanceOf(TransactionImpl)
+
+    let attachment2  = parsedTxn.getJSONObject().attachment
+    let decrypted = decryptMessage(attachment2.data, attachment2.nonce, pubKeyHex, "secret")
+    expect(decrypted).toEqual("qwerty")
+
     done()
   })
 
