@@ -91,7 +91,7 @@ export class Builder {
     this._message = message
     return this
   }
-  public encryptedMessage(encryptedMessage: AppendixEncryptedMessage) {
+  public encryptMessage(encryptedMessage: AppendixEncryptedMessage) {
     this._encryptedMessage = encryptedMessage
     return this
   }
@@ -444,7 +444,7 @@ export class TransactionImpl {
     if (isDefined(attachment["version.Message"]))
       builder.message(new AppendixMessage().parseJSON(attachment))
     if (isDefined(attachment["version.EncryptedMessage"]))
-      builder.encryptedMessage(new AppendixEncryptedMessage().parseJSON(attachment))
+      builder.encryptMessage(new AppendixEncryptedMessage().parseJSON(attachment))
     if (isDefined(attachment["version.PublicKeyAnnouncement"]))
       builder.publicKeyAnnouncement(
         new AppendixPublicKeyAnnouncement().parseJSON(attachment)
@@ -520,7 +520,7 @@ export class TransactionImpl {
     if ((flags & position) != 0) builder.message(new AppendixMessage().parse(buffer))
     position <<= 1
     if ((flags & position) != 0)
-      builder.encryptedMessage(new AppendixEncryptedMessage().parse(buffer))
+      builder.encryptMessage(new AppendixEncryptedMessage().parse(buffer))
     position <<= 1
     if ((flags & position) != 0)
       builder.publicKeyAnnouncement(new AppendixPublicKeyAnnouncement().parse(buffer))
