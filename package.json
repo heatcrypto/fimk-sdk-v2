@@ -1,6 +1,6 @@
 {
   "name": "fimk-sdk-v2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "FIMK support libraries for Node.js",
   "keywords": [
     "fimk",
