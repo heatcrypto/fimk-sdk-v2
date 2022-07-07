@@ -235,7 +235,7 @@ describe("Transaction builder", () => {
   it("can parse transaction bytes", () => {
     return fimkSDK
       .payment("12345", "100.2")
-      // .publicMessage("Hello world")
+      .publicMessage("Hello world")
       .sign("secret phrase")
       .then(t => {
         const transaction = t.getTransaction()
@@ -292,7 +292,7 @@ describe("Transaction builder", () => {
   })
 
   it("can parse 'Digital Goods Purchase' transaction", async done => {
-    let pubKeyHex = secretPhraseToPublicKey("abc")
+    const pubKeyHex = secretPhraseToPublicKey("abc")
     const txn = new Transaction(
         fimkSDK,
         pubKeyHex,
@@ -307,7 +307,44 @@ describe("Transaction builder", () => {
     const parsedTxn = TransactionImpl.parse(bytesHex, fimkSDK.config.isTestnet)
     expect(parsedTxn).toBeInstanceOf(TransactionImpl)
 
-    let attachment2  = parsedTxn.getJSONObject().attachment
+    const attachment2  = parsedTxn.getJSONObject().attachment
+    let decrypted = decryptMessage(attachment2.data, attachment2.nonce, pubKeyHex, "secret")
+    expect(decrypted).toEqual("qwerty")
+    decrypted = decryptMessage(attachment2.data, attachment2.nonce, secretPhraseToPublicKey("secret"), "abc")
+    expect(decrypted).toEqual("qwerty")
+
+    done()
+  })
+
+  it("can parse 'Payment' with public message transaction", async done => {
+    const pubKeyHex = secretPhraseToPublicKey("abc")
+    const txn = fimkSDK
+        .payment(pubKeyHex, "100.2")
+        .publicMessage("qwerty")
+
+    const transaction = await txn.sign("secret")
+    const bytesHex = transaction.getTransaction()!.getBytesAsHex()
+    const parsedTxn = TransactionImpl.parse(bytesHex, fimkSDK.config.isTestnet)
+    expect(parsedTxn).toBeInstanceOf(TransactionImpl)
+
+    const attachment2  = parsedTxn.getJSONObject().attachment
+    expect(attachment2.message).toEqual("qwerty")
+
+    done()
+  })
+
+  it("can parse 'Payment' with private message transaction", async done => {
+    const pubKeyHex = secretPhraseToPublicKey("abc")
+    const txn = fimkSDK
+        .payment(pubKeyHex, "100.2")
+        .privateMessage("qwerty")
+
+    const transaction = await txn.sign("secret")
+    const bytesHex = transaction.getTransaction()!.getBytesAsHex()
+    const parsedTxn = TransactionImpl.parse(bytesHex, fimkSDK.config.isTestnet)
+    expect(parsedTxn).toBeInstanceOf(TransactionImpl)
+
+    const attachment2  = parsedTxn.getJSONObject().attachment
     let decrypted = decryptMessage(attachment2.data, attachment2.nonce, pubKeyHex, "secret")
     expect(decrypted).toEqual("qwerty")
     decrypted = decryptMessage(attachment2.data, attachment2.nonce, secretPhraseToPublicKey("secret"), "abc")
