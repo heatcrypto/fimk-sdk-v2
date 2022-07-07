@@ -56,7 +56,6 @@ var EmptyAttachment = /** @class */ (function (_super) {
     EmptyAttachment.prototype.getSize = function () {
         return this.getMySize();
     };
-    EmptyAttachment.prototype.putBytes = function (buffer) { };
     EmptyAttachment.prototype.putMyBytes = function (buffer) { };
     EmptyAttachment.prototype.putMyJSON = function (json) { };
     EmptyAttachment.prototype.getMySize = function () {
