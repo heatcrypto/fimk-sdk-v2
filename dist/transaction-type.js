@@ -123,7 +123,7 @@ var OrdinaryPayment = /** @class */ (function (_super) {
         return TransactionType.SUBTYPE_PAYMENT_ORDINARY_PAYMENT;
     };
     OrdinaryPayment.prototype.parseAttachment = function (buffer) {
-        buffer.offset++; // advance the buffer position past the version byte
+        // buffer.offset++ // advance the buffer position past the version byte
         return attachment.ORDINARY_PAYMENT;
     };
     OrdinaryPayment.prototype.parseAttachmentJSON = function (json) {
@@ -147,7 +147,7 @@ var ArbitraryMessage = /** @class */ (function (_super) {
         return TransactionType.SUBTYPE_MESSAGING_ARBITRARY_MESSAGE;
     };
     ArbitraryMessage.prototype.parseAttachment = function (buffer) {
-        buffer.offset++; // advance the buffer position past the version byte
+        // buffer.offset++ // advance the buffer position past the version byte
         return attachment.ARBITRARY_MESSAGE;
     };
     ArbitraryMessage.prototype.parseAttachmentJSON = function (json) {

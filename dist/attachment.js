@@ -46,8 +46,9 @@ var long_1 = __importDefault(require("long"));
 var EmptyAttachment = /** @class */ (function (_super) {
     __extends(EmptyAttachment, _super);
     function EmptyAttachment() {
-        return _super.call(this) || this;
-        // this.version = 0
+        var _this = _super.call(this) || this;
+        _this.version = 0;
+        return _this;
     }
     EmptyAttachment.prototype.parse = function (buffer) {
         return this;
@@ -55,6 +56,7 @@ var EmptyAttachment = /** @class */ (function (_super) {
     EmptyAttachment.prototype.getSize = function () {
         return this.getMySize();
     };
+    EmptyAttachment.prototype.putBytes = function (buffer) { };
     EmptyAttachment.prototype.putMyBytes = function (buffer) { };
     EmptyAttachment.prototype.putMyJSON = function (json) { };
     EmptyAttachment.prototype.getMySize = function () {
