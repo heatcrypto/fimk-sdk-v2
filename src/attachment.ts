@@ -39,7 +39,7 @@ export interface Attachment extends Appendix {
 export abstract class EmptyAttachment extends AbstractAppendix implements Attachment {
   constructor() {
     super()
-    this.version = 0
+    // this.version = 0
   }
 
   public parse(buffer: ByteBuffer) {

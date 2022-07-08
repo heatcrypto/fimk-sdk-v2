@@ -46,9 +46,8 @@ var long_1 = __importDefault(require("long"));
 var EmptyAttachment = /** @class */ (function (_super) {
     __extends(EmptyAttachment, _super);
     function EmptyAttachment() {
-        var _this = _super.call(this) || this;
-        _this.version = 0;
-        return _this;
+        return _super.call(this) || this;
+        // this.version = 0
     }
     EmptyAttachment.prototype.parse = function (buffer) {
         return this;
